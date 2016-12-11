@@ -1,0 +1,9 @@
+pid_file="process.pid"
+
+if [ -f "$pid_file" ] ; then
+    echo "process already running"
+    exit 1
+fi
+
+dotnet bin/Release/netcoreapp1.1/PhotoArchiver.dll > /dev/null 2>&1 &
+echo $! > $pid_file

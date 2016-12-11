@@ -1,0 +1,44 @@
+﻿<html>
+
+<head>
+    <title>Photo Archiver</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+
+    <div id="dropZone">
+        <div id="summary">
+            <div>
+                <span class="successColor">Success:&nbsp;</span>
+                <span id="lblSuccessFiles" class="successColor"></span>
+                <span id="lblSuccessPercent" class="successColor"></span>
+            </div>
+            <div>
+                <span class="failureColor">Failed:&nbsp;</span>
+                <span id="lblFailedFiles" class="failureColor"></span>
+                <span id="lblFailedPercent" class="failureColor"></span>
+            </div>
+            <div>
+                <span style="color: gray">Total:&nbsp;</span>
+                <span id="lblTotalFiles" style="color: gray"></span>
+                <span id="lblTotalPercent" style="color: gray"></span>
+                <div class="progressBarContainer" style="margin-left: 8px;"><div id="totalProgressBar" class="progressBar" style="background-color: gray;"></div></div>
+            </div>
+        </div>
+        <div id="files">
+            <table id="reportTable"></table>
+        </div>
+    </div>
+
+    <div id="dropMark"></div>
+
+    <div id="versions">
+        Client version: <span id="lblClientVersion"></span><br/>
+        Server version: <span id="lblServerVersion"></span>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+
+</html>
