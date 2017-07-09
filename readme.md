@@ -12,7 +12,7 @@ Photos and videos are organized based on the date they were taken. Date taken is
 
 ## Build, deploy and run
 
-In order to build and run **PhotoArchiver**, you need .NET Core to be installed on the hosting machine.
+In order to build and run **PhotoArchiver**, you need .NET Core to be installed on the hosting machine. (SDK 1.0.1 or higher)
 
 After you cloned this repository, go to the root directory (where there is the file named `global.json`) and run the following command:
 
