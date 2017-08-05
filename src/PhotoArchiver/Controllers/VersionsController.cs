@@ -7,7 +7,7 @@ namespace PhotoArchiver.Controllers
     public class VersionsController : Controller
     {
         public const int ClientVersion = 2;
-        public const int ServerVersion = 2;
+        public const int ServerVersion = 3;
 
         [HttpGet]
         public IActionResult Get()
