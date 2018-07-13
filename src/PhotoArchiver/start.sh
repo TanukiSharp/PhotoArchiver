@@ -7,5 +7,5 @@ if [ -f "$pid_file" ] ; then
     exit 1
 fi
 
-nohup dotnet bin/Release/netcoreapp1.1/PhotoArchiver.dll >> ../../log.txt 2>&1 &
+nohup dotnet bin/Release/netcoreapp2.1/PhotoArchiver.dll >> ../../log.txt 2>&1 &
 echo $! > $pid_file
