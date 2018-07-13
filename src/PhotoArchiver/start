@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 pid_file="process.pid"
 
 if [ -f "$pid_file" ] ; then
@@ -5,5 +7,5 @@ if [ -f "$pid_file" ] ; then
     exit 1
 fi
 
-nohup dotnet bin/Release/netcoreapp1.1/PhotoArchiver.dll > /dev/null 2>&1 &
+nohup dotnet bin/Release/netcoreapp1.1/PhotoArchiver.dll >> ../../log.txt 2>&1 &
 echo $! > $pid_file
