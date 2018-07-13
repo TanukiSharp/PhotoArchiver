@@ -58,15 +58,11 @@ In the `AppSettings` section, you must add the following properties:
 "TempAbsolutePath": "/path/to/temp/directory",
 ```
 
-**WARNING: Do not put the tilde `~` symbol in the path, it is not resolved and will end up crashing.
-
 This is a temporary directory required for **PhotoArchiver** to store transfered files for processing before moving them to there final storage location.
 
 ```
 "TargetAbsolutePath": "/path/to/files/storage"
 ```
-
-**WARNING: Do not put the tilde `~` symbol in the path, it is not resolved and will end up crashing.
 
 This is the root directory where organized photos and videos are eventually stored.
 
