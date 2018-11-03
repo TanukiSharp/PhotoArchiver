@@ -68,7 +68,7 @@ function upload(file, statusCell, commentCell, progressBar, context) {
 
     xhr.open('POST', '/api/upload', true);
 
-    xhr.timeout = 5 * 60 * 1000; // 5 minutes
+    xhr.timeout = 0; // no timeout
     xhr.onload = function () {
         if (xhr.readyState != 4) {
             return;

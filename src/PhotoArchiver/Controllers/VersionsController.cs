@@ -6,8 +6,8 @@ namespace PhotoArchiver.Controllers
     [Produces("text/plain")]
     public class VersionsController : Controller
     {
-        public const int ClientVersion = 2;
-        public const int ServerVersion = 3;
+        public const int ClientVersion = 3;
+        public const int ServerVersion = 4;
 
         [HttpGet]
         public IActionResult Get()
