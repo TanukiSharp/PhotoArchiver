@@ -15,7 +15,7 @@ namespace PhotoArchiver
             new ExifDateTakenExtractor(),
             new RiffDateTakenExtractor(),
             new QuickTimeDateTakenExtractor(),
-            //new FilenameDateTakenExtractor(),
+            new FilenameDateTakenExtractor(),
             //new LastModificationDateTakenExtractor(),
         };
 
