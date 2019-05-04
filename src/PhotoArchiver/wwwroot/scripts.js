@@ -18,16 +18,18 @@ function queryVersions() {
 
     var lblClientVersion = document.getElementById('lblClientVersion');
     var lblServerVersion = document.getElementById('lblServerVersion');
+    var lblEnvironment = document.getElementById('lblEnvironment');
 
     lblClientVersion.innerText = '?';
     lblServerVersion.innerText = '?';
+    lblEnvironment.innerText = '?';
 
     xhr.open('GET', '/api/versions', true);
 
     xhr.timeout = 5000; // 5 seconds
     xhr.onload = function () {
 
-        var index;
+        var parts;
         var clientVersion;
         var serverVersion;
 
@@ -36,11 +38,11 @@ function queryVersions() {
         }
 
         if (xhr.status >= 200 && xhr.status <= 299) {
-            index = xhr.responseText.indexOf(';');
-            if (index > -1) {
+            parts = xhr.responseText.split(';');
+            if (parts.length === 3) {
 
-                clientVersion = parseInt(xhr.responseText.substr(0, index), 10);
-                serverVersion = parseInt(xhr.responseText.substr(index + 1), 10);
+                clientVersion = parseInt(parts[0], 10);
+                serverVersion = parseInt(parts[1], 10);
 
                 if (clientVersion > 0) {
                     lblClientVersion.innerText = clientVersion.toString();
@@ -50,12 +52,15 @@ function queryVersions() {
                     lblServerVersion.innerText = serverVersion.toString();
                 }
 
+                lblEnvironment.innerText = parts[2];
+
                 return;
             }
         }
 
         lblClientVersion.innerText = 'X';
         lblServerVersion.innerText = 'X';
+        lblEnvironment.innerText = 'X';
     };
 
     xhr.send();
