@@ -60,6 +60,7 @@ namespace PhotoArchiver.Controllers
 
             bool result;
             DateTime dateTaken = DateTime.MinValue;
+            string extractorName = "unknown";
 
             using (fs)
             {
@@ -68,13 +69,15 @@ namespace PhotoArchiver.Controllers
                 try
                 {
                     result = extractor.ExtractDateTaken(fs, out dateTaken);
+                    if (result)
+                        extractorName = extractor.MatchingExtractorName;
                 }
                 finally
                 {
                     dateTakenExtractorService.PutObject(extractor);
                 }
 
-                logger.LogInformation($"Date taken for file '{file.FileName}': {dateTaken.ToString("yyyy.MM.dd_HH.mm.ss")}");
+                logger.LogInformation($"Date taken for file '{file.FileName}': {dateTaken.ToString("yyyy.MM.dd_HH.mm.ss")} (using {extractorName})");
             }
 
             if (result == false)
@@ -107,7 +110,7 @@ namespace PhotoArchiver.Controllers
                 Utility.ChOwn("root", "photo-readwrite", realFilename);
 
                 logger.LogInformation($"Done with file '{realFilename}' !");
-                return Ok(Path.GetFileName(realFilename));
+                return Ok($"{Path.GetFileName(realFilename)} ({extractorName})");
             }
             catch (Exception ex)
             {

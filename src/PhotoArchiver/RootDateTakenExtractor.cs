@@ -19,6 +19,20 @@ namespace PhotoArchiver
             //new LastModificationDateTakenExtractor(),
         };
 
+        public string MatchingExtractorName { get; private set; }
+
+        private const string TypeNameSuffix = "DateTakenExtractor";
+
+        private string GetExtractorName(IDateTakenExtractor dateTakenExtractor)
+        {
+            string typeName = dateTakenExtractor.GetType().Name;
+
+            if (typeName.EndsWith(TypeNameSuffix))
+                return typeName.Substring(0, typeName.Length - TypeNameSuffix.Length);
+
+            return typeName;
+        }
+
         public bool ExtractDateTaken(Stream stream, out DateTime dateTaken)
         {
             dateTaken = DateTime.MinValue;
@@ -28,7 +42,10 @@ namespace PhotoArchiver
                 bool result = extractor.ExtractDateTaken(stream, out dateTaken);
                 stream.Position = 0;
                 if (result)
+                {
+                    MatchingExtractorName = GetExtractorName(extractor);
                     return true;
+                }
             }
 
             return false;
