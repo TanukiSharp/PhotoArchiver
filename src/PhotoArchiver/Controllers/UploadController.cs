@@ -25,12 +25,6 @@ namespace PhotoArchiver.Controllers
             this.dateTakenExtractorService = dateTakenExtractorService;
         }
 
-        [HttpGet]
-        public IActionResult Get(ICollection<IFormFile> files)
-        {
-            return Ok();
-        }
-
         private IActionResult Error(string message)
         {
             return BadRequest(message);
@@ -53,7 +47,6 @@ namespace PhotoArchiver.Controllers
                     return Error("unsupported file type");
             }
 
-            string realFilename = null;
             string workingFilename = Path.Combine(appSettings.TempAbsolutePath, file.FileName);
             logger.LogInformation($"=== workingFilename: '{workingFilename}'");
 
@@ -84,17 +77,14 @@ namespace PhotoArchiver.Controllers
                 logger.LogInformation($"Date taken for file '{file.FileName}': {dateTaken.ToString("yyyy.MM.dd_HH.mm.ss")}");
             }
 
-            fs = null;
-
             if (result == false)
             {
                 TryDeleteFile(workingFilename);
                 return Error("cannot determine date taken");
             }
 
-            var targetRelativeFilename = DateTakenToFullRelativePath(ext, dateTaken);
-            realFilename = Path.Combine(appSettings.TargetAbsolutePath, targetRelativeFilename);
-            logger.LogInformation($"realFilename: '{realFilename}'");
+            string targetRelativeFilename = DateTakenToFullRelativePath(ext, dateTaken);
+            string realFilename = Path.Combine(appSettings.TargetAbsolutePath, targetRelativeFilename);
 
             string realFilePath = Path.GetDirectoryName(realFilename);
             if (Directory.Exists(realFilePath) == false)

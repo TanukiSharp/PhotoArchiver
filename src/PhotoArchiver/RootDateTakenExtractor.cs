@@ -10,7 +10,7 @@ namespace PhotoArchiver
 {
     public class RootDateTakenExtractor : IDateTakenExtractor
     {
-        private IDateTakenExtractor[] extractors = new IDateTakenExtractor[]
+        private readonly IDateTakenExtractor[] extractors = new IDateTakenExtractor[]
         {
             new ExifDateTakenExtractor(),
             new RiffDateTakenExtractor(),
@@ -23,7 +23,7 @@ namespace PhotoArchiver
         {
             dateTaken = DateTime.MinValue;
 
-            foreach (var extractor in extractors)
+            foreach (IDateTakenExtractor extractor in extractors)
             {
                 bool result = extractor.ExtractDateTaken(stream, out dateTaken);
                 stream.Position = 0;

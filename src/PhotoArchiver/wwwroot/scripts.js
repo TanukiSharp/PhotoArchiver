@@ -31,7 +31,7 @@ function queryVersions() {
         var clientVersion;
         var serverVersion;
 
-        if (xhr.readyState != 4) {
+        if (xhr.readyState !== 4) {
             return;
         }
 
@@ -70,7 +70,7 @@ function upload(file, statusCell, commentCell, progressBar, context) {
 
     xhr.timeout = 0; // no timeout
     xhr.onload = function () {
-        if (xhr.readyState != 4) {
+        if (xhr.readyState !== 4) {
             return;
         }
         commentCell.innerText = xhr.responseText;

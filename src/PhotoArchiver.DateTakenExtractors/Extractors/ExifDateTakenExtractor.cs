@@ -4,19 +4,15 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using PhotoArchiver.Contracts;
-//using System.ComponentModel.Composition;
 
 namespace DateTakenExtractors.Extractors
 {
-    //[Export(typeof(IDateTakenExtractor))]
     public class ExifDateTakenExtractor : IDateTakenExtractor
     {
         private const ushort StartOfImage = 0xFFD8;
         private const ushort StartOfScan = 0xFFDA;
-        private const ushort APP0 = 0xFFE0;
         private const ushort APP1 = 0xFFE1;
         private const ushort SUBIFD = 0x8769;
-        private const uint JFIF = 0x4A464946;
 
         private static readonly char[] SpaceCharacter = new char[] { ' ' };
         private static readonly char[] ColonCharacter = new char[] { ':' };
@@ -27,7 +23,7 @@ namespace DateTakenExtractors.Extractors
 
             try
             {
-                using (BinaryReader br = new BinaryReader(stream, Encoding.ASCII, true))
+                using (var br = new BinaryReader(stream, Encoding.ASCII, true))
                 {
                     if (br.ReadUInt16BE() != StartOfImage)
                         return false;
@@ -80,7 +76,8 @@ namespace DateTakenExtractors.Extractors
                 workOffset += 6; // 6 is exif header size
                                  // exif spec says all offsets start from tiff header, but current buffer starts from exif header
 
-                int directoryCount = 0;
+                int directoryCount;
+
                 if (isLittleEndian)
                     directoryCount = BitConverter.ToInt16(data, workOffset);
                 else
@@ -92,7 +89,7 @@ namespace DateTakenExtractors.Extractors
 
                 for (int i = 0; i < directoryCount; i++)
                 {
-                    ImageFileDirectory ifd = ImageFileDirectory.Read(isLittleEndian, data, workOffset);
+                    var ifd = ImageFileDirectory.Read(isLittleEndian, data, workOffset);
 
                     if (ifd.Tag == SUBIFD)
                     {
@@ -206,7 +203,7 @@ namespace DateTakenExtractors.Extractors
         }
     }
 
-    class ImageFileDirectory
+    internal class ImageFileDirectory
     {
         internal ushort Tag { get; private set; }
         internal ushort Type { get; private set; }
@@ -218,7 +215,7 @@ namespace DateTakenExtractors.Extractors
 
         internal static ImageFileDirectory Read(bool isLittleEndian, byte[] data, int offset)
         {
-            ImageFileDirectory ifd = new ImageFileDirectory();
+            var ifd = new ImageFileDirectory();
 
             if (isLittleEndian)
                 ifd.Tag = BitConverter.ToUInt16(data, offset);
@@ -230,16 +227,21 @@ namespace DateTakenExtractors.Extractors
             else
                 ifd.Type = BitConverterBE.ToUInt16(data, offset + 2);
 
-            uint components = 0;
-            uint dataOffset = 0;
+            uint components;
+            uint dataOffset;
 
-            if (isLittleEndian) components = BitConverter.ToUInt32(data, offset + 4);
-            else components = BitConverterBE.ToUInt32(data, offset + 4);
+            if (isLittleEndian)
+                components = BitConverter.ToUInt32(data, offset + 4);
+            else
+                components = BitConverterBE.ToUInt32(data, offset + 4);
 
-            if (isLittleEndian) dataOffset = BitConverter.ToUInt32(data, offset + 8) + 6;
-            else dataOffset = BitConverterBE.ToUInt32(data, offset + 8) + 6;
+            if (isLittleEndian)
+                dataOffset = BitConverter.ToUInt32(data, offset + 8) + 6;
+            else
+                dataOffset = BitConverterBE.ToUInt32(data, offset + 8) + 6;
 
             uint componentSize = 1;
+
             if (ifd.Type == 3 || ifd.Type == 8)
                 componentSize = 2;
             else if (ifd.Type == 4 || ifd.Type == 9 || ifd.Type == 11)
@@ -248,6 +250,7 @@ namespace DateTakenExtractors.Extractors
                 componentSize = 8;
 
             uint totalByteLength = componentSize * components;
+
             if (totalByteLength <= 4)
                 ifd.Value = new ArraySegment<byte>(data, offset + 8, (int)totalByteLength);
             else
@@ -257,7 +260,7 @@ namespace DateTakenExtractors.Extractors
         }
     }
 
-    class Packet
+    internal class Packet
     {
         internal ushort Marker { get; private set; }
         internal ushort Length { get; private set; }
@@ -269,12 +272,11 @@ namespace DateTakenExtractors.Extractors
 
         internal static Packet ReadPacket(BinaryReader br)
         {
-            Packet p = new Packet();
-
-            p.Marker = br.ReadUInt16BE();
-            p.Length = br.ReadUInt16BE();
-
-            return p;
+            return new Packet
+            {
+                Marker = br.ReadUInt16BE(),
+                Length = br.ReadUInt16BE()
+            };
         }
 
         internal void ReadContent(BinaryReader br)
