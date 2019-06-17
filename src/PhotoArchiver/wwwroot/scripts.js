@@ -83,7 +83,7 @@ function upload(file, statusCell, commentCell, progressBar, context) {
             statusCell.innerHTML = '<span class="successColor">OK</span>';
             context.success();
         } else {
-            statusCell.innerHTML = '<span class="failureColor">FAILED</span>';
+            statusCell.innerHTML = '<span class="failureColor">FAILED (after transfer started)</span>';
             context.failed();
         }
     };
@@ -96,8 +96,14 @@ function upload(file, statusCell, commentCell, progressBar, context) {
         }
     };
 
+    xhr.onerror = function (e) {
+        statusCell.innerHTML = '<span class="failureColor">FAILED (before transfer started)</span>';
+        context.failed();
+    };
+
     var formData = new FormData();
     formData.append('files', file, file.name);
+
     xhr.send(formData);
 }
 
@@ -132,6 +138,9 @@ dropZone.addEventListener('drop', function(e) {
     var file;
     var files;
 
+    var item;
+    var entry;
+
     var successFiles = -1;
     var failedFiles = -1;
 
@@ -163,12 +172,22 @@ dropZone.addEventListener('drop', function(e) {
     htmlReallySucksCounter = 0;
     dropMark.style.display = 'none';
 
-    files = e.dataTransfer.files;
+    files = [];
+
+    for (item of e.dataTransfer.items) {
+        entry = item.webkitGetAsEntry();
+        if (entry.isFile) {
+            files.push(item.getAsFile());
+        }
+    }
+
     totalFiles = files.length;
 
     if (totalFiles === 0) {
         return;
     }
+
+    files.sort(function (a, b) { return a.name < b.name ? -1 : +1; });
 
     lblSuccessFiles = document.getElementById('lblSuccessFiles');
     lblSuccessPercent = document.getElementById('lblSuccessPercent');

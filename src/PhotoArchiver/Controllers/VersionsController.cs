@@ -7,7 +7,7 @@ namespace PhotoArchiver.Controllers
     [Produces("text/plain")]
     public class VersionsController : Controller
     {
-        public const int ClientVersion = 4;
+        public const int ClientVersion = 5;
         public const int ServerVersion = 5;
 
         private readonly string environmentName;
