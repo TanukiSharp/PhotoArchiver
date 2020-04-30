@@ -1,0 +1,83 @@
+body {
+    font-family: 'Segoe UI', Verdana, Arial;
+    background-color: whitesmoke;
+}
+
+.successColor {
+    color: #1FDE1F !important;
+}
+
+.successBackgroundColor {
+    background-color: #1FDE1F !important;
+}
+
+.failureColor {
+    color: #FF4646 !important;
+}
+
+.failureBackgroundColor {
+    background-color: #FF4646 !important;
+}
+
+th, td {
+    padding-right: 16px;
+}
+
+th {
+    text-align: left;
+}
+
+div.progressBarContainer {
+    height: 16px;
+    width: 150px;
+    background-color: #E0E0E0;
+    border: 0px solid;
+    border-radius: 4px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+div.progressBar {
+    height: 100%;
+    width: 0%;
+    background-color: #00B8FF;
+    border: 0px solid;
+    border-radius: 4px;
+}
+
+#versions {
+    position: absolute;
+    top: 4px;
+    right: 10px;
+    color: gray;
+    font-size: 0.7em;
+    text-align: right;
+}
+
+#dropZone {
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    z-index: -5000;
+    display: flex;
+    flex-direction: column;
+}
+
+#files {
+    margin-left: 4px;
+    margin-top: 8px;
+    overflow-y: auto;
+}
+
+#dropMark {
+    display: none;
+    z-index: 5000;
+    position: fixed;
+    right: 0px;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    border: solid #0080FF;
+    border-width: 6px;
+    pointer-events: none;
+}
