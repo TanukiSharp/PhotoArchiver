@@ -16,6 +16,7 @@ namespace PhotoArchiver
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
+                .UseSystemd()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder
