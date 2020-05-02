@@ -57,6 +57,11 @@ You can optionally enable the service so it will be started when the machine sta
 sudo systemctl enable PhotoArchiver
 ```
 
+Also, you may need to set port to `firewalld` if you use it:
+```sh
+sudo firewall-cmd --add-port 5000/tcp --permanent
+```
+
 ### Configuration
 
 In the output directory, there should be a files named `appsettings.json` and `appsettings.Production.json` that contains the **PhotoArchiver** runtime configuration, as follow:
