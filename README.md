@@ -8,31 +8,53 @@ Photos and videos are organized based on the date they were taken. Date taken is
 
 ![PhotoArchiver web user interface](Documentation/screenshot.png "PhotoArchiver web user interface")
 
-# How to use
+## How to use
 
-## Build, deploy and run
+### Build, deploy and run
+
+#### Linux
 
 In order to build and run **PhotoArchiver**, you need .NET Core to be installed on the hosting machine. (SDK 3.1 or higher)
 
-After you cloned this repository, go to the `PhotoArchiver` directory and run:
+After you cloned this repository, go to the `Linux` directory and run:
 
-```
-dotnet publish -c Release
-```
-
-This will build **PhotoArchiver** in `Release` configuration and produce the directory `bin/Release/netcoreapp<version>/publish` containing everything needed to run it.
-
-Deploy the content of this directory to the machine where you want to store your photos and videos, and run the following command (on the hosting machine):
-
-```
-dotnet PhotoArchiver.dll
+```sh
+./0-setup-service.sh [<user>]
 ```
 
-Describing how to start an application for long term use is beyond the scope of this document, and depends on the platform it runs on.
+The `<user>` is optional, if not provided, the current user is used. This determines the ownership of the running process in the service.
 
-## Configuration
+This step is a one-time step and does not need to be done again in the future, unless you change the user.
 
-In the `publish` directory, there should be a file named `appsettings.json` that contains the **PhotoArchiver** runtime configuration, as follow:
+Then stop the service if it is running:
+```sh
+./1-stop-service.sh
+```
+
+Then build the source code and deploy:
+```sh
+./2-build.sh [<user>]
+```
+
+This will build **PhotoArchiver** in `Release` configuration and output everything to `/opt/PhotoArchiver`. Again, the `<user>` is optional and sets ownership of the folder `/opt/PhotoArchiver` and all its content. If `<user>` is not provided, the current user is used.
+
+At this stage, you may want to update the configuration in `/opt/PhotoArchiver/appsettings.*` files.
+
+See **Configuration** section below for more details.
+
+Finally, starts the service:
+```sh
+./3-start-service.sh
+```
+
+You can optionally enable the service so it will be started when the machine starts, as follow:
+```sh
+sudo systemctl enable PhotoArchiver
+```
+
+### Configuration
+
+In the output directory, there should be a files named `appsettings.json` and `appsettings.Production.json` that contains the **PhotoArchiver** runtime configuration, as follow:
 
 ```
 {
@@ -60,7 +82,7 @@ This is a temporary directory required for **PhotoArchiver** to store transferre
 
 This is the root directory where organized photos and videos are eventually stored.
 
-## Listening end point
+### Listening end point
 
 By default **PhotoArchiver** listens on all the network interface on port 5000.
 If you want to change it, modify the code, in file `Program.cs` at line 28, where it looks like `.UseUrls("http://*:5000")`.
@@ -68,9 +90,9 @@ Change the number `5000` by whatever you want. Note that you have to do this bef
 
 Sorry for those unfamiliar with technical details.
 
-# For developers
+## For developers
 
-## Interface
+### Interface
 
 The project `PhotoArchiver.Contracts` provide the `IDateTakenExtractor` interface, which is defined as follow:
 
@@ -85,7 +107,7 @@ Any class inheriting from the `IDateTakenExtractor` interface can participate in
 
 The classes implementing `IDateTakenExtractor` have to be registered in the `RootDateTakenExtractor` class (which is itself an `IDateTakenExtractor`) of the `PhotoArchiver` project.
 
-## Implementations
+### Implementations
 
 For the moment there are 4 metadata formats supported: EXIF, RIFF, QuickTime and file name.
 
