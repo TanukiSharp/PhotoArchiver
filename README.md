@@ -47,6 +47,11 @@ Finally, starts the service:
 ./3-start-service.sh
 ```
 
+Steps to stop the service, build the code and start the service can be done with one script if you do not need to change the configuration, with the following script:
+```sh
+./0-rebuild.sh
+```
+
 You can optionally enable the service so it will be started when the machine starts, as follow:
 ```sh
 sudo systemctl enable PhotoArchiver
