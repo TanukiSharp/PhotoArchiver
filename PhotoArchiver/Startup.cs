@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using PhotoArchiver.Services;
 
 namespace PhotoArchiver
@@ -20,7 +21,6 @@ namespace PhotoArchiver
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
@@ -62,7 +62,7 @@ namespace PhotoArchiver
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger, ILoggerFactory loggerFactory, IOptions<AppSettings> appSettings)
         {
             if (env.IsDevelopment())
             {
@@ -72,8 +72,6 @@ namespace PhotoArchiver
             loggerFactory.CreateLogger<Controllers.UploadController>();
 
             app.UseRouting();
-
-            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
@@ -86,6 +84,9 @@ namespace PhotoArchiver
             app.UseDefaultFiles(options);
 
             app.UseStaticFiles();
+
+            logger.LogInformation($"TempAbsolutePath: {appSettings.Value.TempAbsolutePath}");
+            logger.LogInformation($"TargetAbsolutePath: {appSettings.Value.TargetAbsolutePath}");
         }
     }
 }
