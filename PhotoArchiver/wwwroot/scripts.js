@@ -103,6 +103,7 @@ function upload(file, statusCell, commentCell, progressBar, context) {
 
     var formData = new FormData();
     formData.append('files', file, file.name);
+    // formData.append('lastModified', file.lastModified);
 
     xhr.send(formData);
 }

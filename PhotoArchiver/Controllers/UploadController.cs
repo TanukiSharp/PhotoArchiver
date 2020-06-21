@@ -30,11 +30,24 @@ namespace PhotoArchiver.Controllers
             return BadRequest(message);
         }
 
+        private static bool TryConvertLastModified(string lastModified, out DateTime result)
+        {
+            if (ulong.TryParse(lastModified, out ulong value) == false)
+            {
+                result = DateTime.MinValue;
+                return false;
+            }
+
+            result = new DateTime(1970, 1, 1).AddMilliseconds(value).ToLocalTime();
+
+            return true; 
+        }
+
         [HttpPost]
         [Produces("text/plain")]
-        public async Task<IActionResult> Post(ICollection<IFormFile> files)
+        public async Task<IActionResult> Post(string lastModified, IFormFile files)
         {
-            IFormFile file = files.FirstOrDefault();
+            IFormFile file = files;
 
             if (file == null)
                 return BadRequest();
@@ -82,8 +95,15 @@ namespace PhotoArchiver.Controllers
 
             if (result == false)
             {
-                TryDeleteFile(workingFilename);
-                return Error("cannot determine date taken");
+                if (lastModified != null && TryConvertLastModified(lastModified, out dateTaken))
+                {
+                    extractorName = "Last modified date time [from browser]";
+                }
+                else
+                {
+                    TryDeleteFile(workingFilename);
+                    return Error("cannot determine date taken");
+                }
             }
 
             string targetRelativeFilename = DateTakenToFullRelativePath(ext, dateTaken);
