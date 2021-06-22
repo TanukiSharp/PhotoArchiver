@@ -171,8 +171,10 @@ namespace PhotoArchiver.Controllers
                 fs.Position = 0;
                 return fs;
             }
-            catch
+            catch (Exception ex)
             {
+                logger.LogCritical(ex, "DownloadToLocalFileStream method failed.");
+
                 if (fs != null)
                     fs.Dispose();
 
@@ -188,9 +190,9 @@ namespace PhotoArchiver.Controllers
             {
                 System.IO.File.Delete(filename);
             }
-            catch
+            catch (Exception ex)
             {
-                logger.LogWarning($"Impossible to delete file '{filename}'");
+                logger.LogWarning(ex, $"Impossible to delete file '{filename}'");
             }
         }
 
