@@ -60,6 +60,9 @@ namespace PhotoArchiver.Controllers
                     return Error("unsupported file type");
             }
 
+            if (Directory.Exists(appSettings.TempAbsolutePath) == false)
+                Directory.CreateDirectory(appSettings.TempAbsolutePath);
+
             string workingFilename = Path.Combine(appSettings.TempAbsolutePath, file.FileName);
             logger.LogInformation($"=== workingFilename: '{workingFilename}'");
 

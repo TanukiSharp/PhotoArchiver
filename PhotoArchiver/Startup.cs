@@ -53,12 +53,6 @@ namespace PhotoArchiver
 
             if (Path.IsPathRooted(appSettings.TempAbsolutePath) == false)
                 throw new Exception($"{nameof(appSettings.TempAbsolutePath)} must be an absolute path");
-
-            if (Directory.Exists(appSettings.TargetAbsolutePath) == false)
-                Directory.CreateDirectory(appSettings.TargetAbsolutePath);
-
-            if (Directory.Exists(appSettings.TempAbsolutePath) == false)
-                Directory.CreateDirectory(appSettings.TempAbsolutePath);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
